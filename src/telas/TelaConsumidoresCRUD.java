@@ -67,7 +67,7 @@ public class TelaConsumidoresCRUD extends javax.swing.JFrame {
         modelo.setNumRows(0);  
             ConsumidorDB pdao = new ConsumidorDB();
 
-            for (Consumidor atual : pdao.listar()) {
+            for (Consumidor atual : pdao.listarEmOrdemCrescentePorNome()) {
 
                 modelo.addRow(new Object[]{
                     atual.getId(),

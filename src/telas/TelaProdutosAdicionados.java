@@ -4,10 +4,13 @@
  */
 package telas;
 
+import entities.Pedido;
 import entities.Produto;
 import entities.ProdutosUsados;
+import entitiesdb.PedidoDB;
 import entitiesdb.ProdutoDB;
 import entitiesdb.ProdutoUsadoDB;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,6 +23,7 @@ public class TelaProdutosAdicionados extends javax.swing.JFrame {
      */
     public TelaProdutosAdicionados() {
         initComponents();
+        listarJTabela();
         ProdutoDB pdao= new ProdutoDB();
         for(Produto p:pdao.listar()){
             
@@ -28,7 +32,7 @@ public class TelaProdutosAdicionados extends javax.swing.JFrame {
         }
     }
     
-    private int obterIdProdutoSelecionado() {
+    public int obterIdProdutoSelecionado() {
          Produto produtoSelecionado = (Produto) cbProdutos.getSelectedItem();
         if (produtoSelecionado != null) {
             return produtoSelecionado.getId();
@@ -38,6 +42,36 @@ public class TelaProdutosAdicionados extends javax.swing.JFrame {
         }
     }
     
+    public double obterValorProdutoSelecionado() {
+         Produto produtoSelecionado = (Produto) cbProdutos.getSelectedItem();
+        if (produtoSelecionado != null) {
+            return produtoSelecionado.getValor();
+        } else {
+            // Lidar com a situação em que nenhum item está selecionado
+            return -1; // Ou outro valor padrão apropriado
+        }
+    }
+    
+    
+    
+    public void listarJTabela() {
+        DefaultTableModel modelo = (DefaultTableModel) jtProdutos.getModel();
+        modelo.setNumRows(0);  
+            ProdutoUsadoDB pdao = new ProdutoUsadoDB();
+
+            for (ProdutosUsados atual : pdao.listarProdutosUsados()) {
+
+                modelo.addRow(new Object[]{
+                    atual.getNome(),
+                    atual.getMarca(),
+                    atual.getQuantidade(),
+                    atual.getPrecoUnitario(),
+                    atual.getPreco(),
+                });
+
+            }
+
+        }
   
 
     /**
@@ -57,18 +91,18 @@ public class TelaProdutosAdicionados extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jtProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nome", "Marca", "Quantidade", "Preço"
+                "Nome", "Marca", "Quantidade", "Preço.Unid", "PreçoMult"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -179,20 +213,30 @@ public class TelaProdutosAdicionados extends javax.swing.JFrame {
 
     private void adicionarbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarbtnActionPerformed
         
-        
         int temp1 = obterIdProdutoSelecionado();
+        double temp2 = obterValorProdutoSelecionado();
         
+        
+                
         ProdutosUsados pu = new ProdutosUsados();
         ProdutoUsadoDB dao = new ProdutoUsadoDB();
-        pu.setQuantidade(Integer.parseInt(txtquantidade.getText()));
+
+
+        int quantidade = Integer.parseInt(txtquantidade.getText());
+        int idPedido = dao.obterUltimoIdPedido();
+
+        double precoTotal = temp2 * quantidade;
+        
+        pu.setQuantidade(quantidade);
         pu.setIdProduto(temp1);
-        pu.setIdPedido(dao.obterUltimoIdPedido());
+        pu.setIdPedido(idPedido);
+        pu.setPreco(precoTotal);
         
-        
-        
+        // Adicionar o produto usado ao banco de dados
         dao.create(pu);
 
         txtquantidade.setText("");
+        listarJTabela();
     }//GEN-LAST:event_adicionarbtnActionPerformed
 
     /**

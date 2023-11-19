@@ -10,8 +10,8 @@ package entities;
  */
 public class Pedido {
     int id,prestadorId,consumidorId,servicoId;
-    String nomePet,tipoPet,portePet,racaPet,estadopedido;
-    double valorTotal;
+    String nomePet,tipoPet,portePet,racaPet,estadopedido,data,consumidor,prestador,servico;
+    double valorTotal,servicovalor,ValorProdutosUsados;
 
     public int getId() {
         return id;
@@ -85,6 +85,16 @@ public class Pedido {
         this.estadopedido = estadopedido;
     }
 
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    
+    
     public double getValorTotal() {
         return valorTotal;
     }
@@ -92,7 +102,52 @@ public class Pedido {
     public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
     }
+
+    public String getConsumidor() {
+        return consumidor;
+    }
+
+    public void setConsumidor(String consumidor) {
+        this.consumidor = consumidor;
+    }
+
+    public String getPrestador() {
+        return prestador;
+    }
+
+    public void setPrestador(String prestador) {
+        this.prestador = prestador;
+    }
+
+    public String getServico() {
+        return servico;
+    }
+
+    public void setServico(String servico) {
+        this.servico = servico;
+    }
+
+    public double getServicovalor() {
+        return servicovalor;
+    }
+
+    public void setServicovalor(double servicovalor) {
+        this.servicovalor = servicovalor;
+    }
+
+    public double getValorProdutosUsados() {
+        return ValorProdutosUsados;
+    }
+
+    public void setValorProdutosUsados(double ValorProdutosUsados) {
+        this.ValorProdutosUsados = ValorProdutosUsados;
+    }
     
     
+    
+    @Override
+    public String toString() {
+        return String.valueOf(getId());
+    }
     
 }
